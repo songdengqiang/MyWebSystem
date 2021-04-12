@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import axios from "axios";
 // import { zl_calculator_zl } from 'zl_calculator_zl'
 const commonF = {
   // 获取实时时间
@@ -11,21 +10,6 @@ const commonF = {
   // 随机产生介于min和max之间的数字
   getRndInteger: (min, max) => {
     return Math.floor(Math.random() * (max - min) ) + min;
-  },
-  //获取数据库的数据
-  getDBdata:(path,param,callback)=>{
-    // console.log(path,param)
-    axios
-          .post(path, param)
-          .then((res) => {
-            // console.log(res.data)
-            if(res.data === '失败'){
-              alert('数据库连接失败！')
-            }else{
-              // alert('数据库连接成功！')
-              callback(res.data)
-            }
-          })
   },
   //获取input上传文件得路径
   getobjurl: (file) => {

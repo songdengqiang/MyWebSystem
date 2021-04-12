@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       togethers: "3年",
-      memorial_day: "傻瓜的生日:1月1日",
+      memorial_day: "更新时间:2021/4/12",
       times: "2020-12-24-12:43",
       display: false,
       weathers: "🌤",
