@@ -1,5 +1,7 @@
 // 抽离出的共用页面方法
 import axios from 'axios'
+// import * as d3 from "d3";
+import creatKg from './creatKG'
 
 export default {
   data() {
@@ -12,7 +14,8 @@ export default {
         states: '失败',
         dataPath: '/user/graphs/'
       },
-      neo4jData: []
+      neo4jData: null,
+      myKG1:null
     }
   },
   computed: {},
@@ -48,7 +51,7 @@ export default {
           break
       }
     },
-    getData(param, num ,pathName) {
+    getData(param, num, pathName) {
       switch (num) {
         // neo4j数据库的连接-post请求
         case 0:
@@ -68,18 +71,27 @@ export default {
           break
         // neo4j数据库的操作-get请求
         case 1:
-          axios.get(this.pathV + param.dataPath + pathName).then((res)=>{
-            if(res.data.datas!== null){
-              console.log(res.data.datas)
+          axios.get(this.pathV + param.dataPath + pathName).then((res) => {
+            if (res.data.datas !== null) {
+              
               this.neo4jData = res.data.datas
-              this.$message(res.data.info);
-            }else{
-              this.$message(res.data.info);
+              this.$message(res.data.info + "开始绘制图形！");
+              this.myKG1 = new creatKg("kgGraphContain");
+              console.log(this.neo4jData)
+              this.myKG1.updataGraphs(this.neo4jData);
+              this.drawer = false
+            } else {
+              this.$message('数据库获取数据失败！');
             }
           })
 
       }
 
+    },
+    clearKgInfo() {
+      this.neo4jData = {nodes:[],links:[]};
+      this.myKG1.updataGraphs(this.neo4jData);
+      this.drawer = false
     }
   }
 }

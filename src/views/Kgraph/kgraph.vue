@@ -1,5 +1,5 @@
 <template>
-  <div class="flexDiv_C KgraphCon">
+  <div class="flexDiv_C KgraphCon kgGraphContain">
     <!-- 控制面板的子模块 -->
       <kgControlc class="kgControlc" :databaseInfo='kgraphInfo' @loginps ="displays(0)"></kgControlc>
       <loginPanelc v-show="kgraphInfo.dataBaseS" class="databaseLogin">
@@ -38,30 +38,6 @@ export default {
   data() {
     return {
       // 知识图谱库数据变量
-      myKG1: null,
-      myKgD: {
-        nodes: [
-          {
-            id: 0,
-            color: "red",
-            labels: ["person"],
-            name: "默认节点1",
-          },
-          {
-            id: 1,
-            color: "green",
-            labels: ["person"],
-            name: "默认节点2",
-          },
-        ],
-        links: [
-          {
-            source: 0,
-            target: 1,
-            relation: "next",
-          },
-        ],
-      },
       //页面变量
       controlInfo: "固定控制栏",
       controlState: false,
@@ -299,8 +275,6 @@ export default {
   //   },
   // },
   mounted() {
-    // const _this = this;
-    // _this.myKG1 = new drawKG("drawKG");
   },
 };
 </script>

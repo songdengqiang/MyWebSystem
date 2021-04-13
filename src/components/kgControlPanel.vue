@@ -19,6 +19,7 @@
       <el-row>
         <h4>{{ loginInfo }}{{ infoJudge }}</h4>
       </el-row>
+      <h4>可视化功能</h4>
       <div class="otherControl" v-show="otherControl">
         <el-dropdown trigger="click" class="kgNumChoose">
           <span class="el-dropdown-link">
@@ -26,33 +27,48 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-circle-check" 
-              ><span @click="getData(databaseInfo,1,'getlimit1')">所有知识组显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getAlK')">所有知识组显示</span></el-dropdown-item
             >
-            <el-dropdown-item icon="el-icon-circle-check"><span @click="getData(databaseInfo,1,'getAlK')">25组知识显示</span></el-dropdown-item>
+            <el-dropdown-item icon="el-icon-circle-check"><span @click="getData(databaseInfo,1,'getlimit1')">25组知识显示</span></el-dropdown-item>
             <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">50组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">100组知识显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getlimit2')">50组知识显示</span></el-dropdown-item
             >
             <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">200组知识显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getlimit3')">100组知识显示</span></el-dropdown-item
             >
             <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">400组知识显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getlimit4')">200组知识显示</span></el-dropdown-item
             >
             <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">800组知识显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getlimit5')">400组知识显示</span></el-dropdown-item
             >
             <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">1600组知识显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getlimit6')">800组知识显示</span></el-dropdown-item
             >
             <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="getData(databaseInfo,1,'getlimit1')">3200组知识显示</span></el-dropdown-item
+              ><span @click="getData(databaseInfo,1,'getlimit7')">1600组知识显示</span></el-dropdown-item
+            >
+            <el-dropdown-item icon="el-icon-circle-check"
+              ><span @click="getData(databaseInfo,1,'getlimit8')">3200组知识显示</span></el-dropdown-item
             >
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="info" size="small" plain>清空显示</el-button>
+        <el-button type="info" size="small" plain @click="clearKgInfo()">清空显示</el-button>
+        <hr>
+        <h4>数据的导入功能</h4>
+        <el-row>
+          <el-button type="info" size="small" plain @click="clearKgInfo()" class="btnStyle">txt数据导入</el-button>
+          <el-button type="info" size="small" plain @click="clearKgInfo()" class="btnStyle">txt数据导出</el-button>
+          <el-button type="info" size="small" plain @click="clearKgInfo()" class="btnStyle">json数据导入</el-button>
+          <el-button type="info" size="small" plain @click="clearKgInfo()" class="btnStyle">json数据导出</el-button>
+          <el-button type="info" size="small" plain @click="clearKgInfo()" class="btnStyle">csv数据导入</el-button>
+          <el-button type="info" size="small" plain @click="clearKgInfo()" class="btnStyle">csv数据导出</el-button>
+        </el-row>
+        <hr>
+        <h4>其它功能</h4>
+        <el-row>
+
+        </el-row>
       </div>
     </el-drawer>
   </div>
@@ -109,5 +125,12 @@ h4 {
 }
 .kgNumChoose:hover{
   background-color: #86ce63;
+}
+span{
+  width: 100%;
+  height: 100%;
+}
+.btnStyle{
+  margin: 1rem;
 }
 </style>
