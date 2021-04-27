@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <router-view :headerInfo='loginInfo' @chengeTitle = 'chengeL'></router-view>
+<!--    <router-view :headerInfo='loginInfo' @chengeTitle = 'chengeL'></router-view>-->
+    <router-view></router-view>
     <!-- <router-view /> -->
   </div>
 </template>
@@ -9,15 +10,9 @@
 // @ is an alias to /src
 export default {
   name: "App",
-  data(){
-    return{
-       loginInfo: "离线用户1！"
-    }
-  },
-  methods:{
-    chengeL(data){
-      this.loginInfo = data
-    }
+  created() {
+    //初始化全局属性
+    this.$store.commit('initStateData')
   }
 };
 </script>

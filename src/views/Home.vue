@@ -21,14 +21,14 @@
         >
         <el-menu-item class="el-menu-item-img">
           <span style="margin-right: 1rem"
-            >欢迎({{ headerInfo }})登录此系统！</span
+            >欢迎({{ $store.state.loginInfo }})登录此系统！</span
           >
           <el-submenu index="6" class="el-menu-item-title loginC">
             <template slot="title"></template>
-            <el-menu-item index="6-1" @click="pageJump(2)"
+            <el-menu-item index="6-1" @click="pageJump('登录页')"
               >切换用户</el-menu-item
             >
-            <el-menu-item index="6-2" @click="pageJump(3)"
+            <el-menu-item index="6-2" @click="pageJump('退出')"
               >退出系统</el-menu-item
             >
           </el-submenu>
@@ -49,7 +49,8 @@
           </li>
         </ul>
       </asidec>
-      <kgraphc></kgraphc>
+      <router-view></router-view>
+<!--      <kgraphc></kgraphc>-->
     </main>
     <footerc></footerc>
   </div>
@@ -58,30 +59,25 @@
 <script>
 import headers from "../components/headers";
 import footers from "../components/footers";
-import mixins from "../assets/js/methods";
 import asides from "../components/asides";
-import kgraphs from "./Kgraph/kgraph";
 import * as d3 from "d3";
+import mixins from "@/tools/mixins";
 
 export default {
   name: "Home",
   data() {
     return {
-      options: [
-        { value: 2, label: "用户切换" },
-        { value: 3, label: "退出系统" },
-      ],
+      pageName:'Home',
       value: "",
       funDisplay: '解除固定',
     };
   },
-  props: ["headerInfo"],
-  mixins: [mixins],
+  mixins:[mixins],
   components: {
     headerc: headers,
     footerc: footers,
     asidec: asides,
-    kgraphc: kgraphs,
+    // kgraphc: kgraphs,
   },
   methods: {
     headerDisp() {
@@ -94,9 +90,6 @@ export default {
         _this.funDisplay = '解除固定';
       }
     },
-  },
-  mounted() {
-    // console.log(this.$parent);
   },
 };
 </script>

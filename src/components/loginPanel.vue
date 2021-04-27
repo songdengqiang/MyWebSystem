@@ -17,7 +17,7 @@ export default {
   name: "loginPanel",
   data() {
     return {
-      
+
     };
   },
   methods: {
@@ -34,8 +34,8 @@ export default {
   /* float: left; */
   float: left;
   width: 60%;
-  height: 65%;
-  margin-top: 8%;
+  height: 60%;
+  margin-top: 10%;
   margin-left: 20%;
   background-color: rgba(219, 219, 219, 0.6);
   border-radius: 1.5rem;

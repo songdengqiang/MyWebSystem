@@ -25,8 +25,8 @@
           </div>
         </el-form>
         <el-row slot="buttons">
-          <el-button @click="pageJump(0)" v-show="!displayC">登录</el-button>
-          <el-button @click="pageJump(1)" v-show="displayC">登录</el-button>
+          <el-button @click="pageJump('离线首页')" v-show="!displayC">登录</el-button>
+          <el-button @click="loginVerify()" v-show="displayC">登录</el-button>
           <el-button type="danger" v-show="displayC">注册</el-button>
         </el-row>
       </loginPanelc>
@@ -41,15 +41,14 @@ import headers from "../components/headers";
 import footers from "../components/footers";
 import asides from "../components/asides";
 import loginPanel from "../components/loginPanel";
-import mixins from "../assets/js/methods";
+import mixins from "@/tools/mixins";
 export default {
   name: "Login",
   mixins: [mixins],
-  props: ["headerInfo"],
   data() {
     return {
+      pageName:'Login',
       logintype: "离线登录",
-      headerTitle:'离线用户',
       displayC: false,
       form: {
         account: "",
@@ -64,7 +63,20 @@ export default {
     loginPanelc: loginPanel,
   },
   methods:{
-    
+    //密码验证
+    loginVerify(){
+      const _this = this;
+      if (_this.form.account === '小强' && _this.form.password == '123456'){
+        _this.$store.commit('editLogin', _this.form.account)
+        _this.pageJump('用户首页');
+      }else {
+        _this.form.account = "";
+        _this.form.password = "";
+        _this.$alert('输入的账户和密码错误，请重登！', '登录提示', {
+          confirmButtonText: '确定',
+        });
+      }
+    }
   },
   watch: {
     logintype(newz) {
@@ -75,6 +87,9 @@ export default {
       }
     },
   },
+  created() {
+    // console.log(sessionStorage.getItem('userName'))
+  }
 };
 </script>
 <style scoped lang='css'>

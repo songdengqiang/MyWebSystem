@@ -5,11 +5,7 @@ import store from './store'
 import * as d3 from 'd3'
 import ElementUI from 'element-ui';
 import comF from './assets/js/common'
-import globelV from './assets/js/globleV'
 import 'element-ui/lib/theme-chalk/index.css';
-// import $ from 'jquery'
-// import 'bootstrap'
-// import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 Vue.use(ElementUI);
@@ -47,7 +43,6 @@ d3.selection.prototype.style = function () {
 
 Vue.config.productionTip = false
 Vue.prototype.comF = comF
-Vue.prototype.pathV = globelV.pathID
 
 new Vue({
   router,

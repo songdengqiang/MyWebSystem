@@ -5,7 +5,7 @@
         <li class="list-group-item">
           <h4>背景列表</h4>
         </li>
-        <li class="list-group-item" v-for="x in imgData" :key="x.id">
+        <li class="list-group-item" v-for="x in $store.state.bgImgList" :key="x.id">
           <img
             :src="x.path"
             alt="x.name"
@@ -34,14 +34,12 @@
 </template>
 
 <script>
-import axios from "axios";
+import {getData} from "@/tools/network/requests";
 import * as d3 from "d3";
 export default {
   name: "asides",
   data() {
-    return {
-      imgData: [],
-    };
+    return {};
   },
   methods: {
     chooseFile() {
@@ -52,71 +50,49 @@ export default {
       let x = document.getElementById("addImg").files[0];
       let params = new FormData();
       params.append("file", x);
-      let config = { header: { "Content-Type": "multipart/form-data" } };
-      axios
-        .post(_this.pathV + "/user/addImgs", params, config)
-        .then((res) => {
-          if (res.data === "成功") {
-            _this.getimgD();
-            alert("图片上传成功！");
-          }
-        })
-        .catch((err) => {
-          alert(err);
-        });
-    },
-    // 获取背景图片的数据
-    getimgD() {
-      const _this = this;
-      axios.get(_this.pathV + "/user/sendImg").then((res) => {
-        if (res.data.title === "成功") {
-          _this.imgData = res.data.data;
+      // let config = { header: { "Content-Type": "multipart/form-data" } };
+      getData({url:'/user/addImgs',method: 'post',data:params,header:{ "Content-Type": "multipart/form-data" }}).then(res=>{
+        if (res === "成功") {
+          _this.getimgD();
+          _this.$message('图片上传成功！')
+        }else {
+          _this.$message('图片上传失败！')
         }
-      });
+      }).catch(()=>{
+        _this.$message('图片上传失败！')
+      })
     },
     //改变背景图片
     changeB(paths) {
       const _this = this;
-      try {
-        axios
-          .post(_this.pathV + "/user/changeBK", { path: paths })
-          .then((res) => {
-            if (res.data.title === "成功") {
-              d3.select(".myAppCon").style(
-                "background-image",
-                `url(${res.data.data})`
-              );
-            }
-          });
-      } catch (err) {
-        alert("背景修改失败！-服务器请求失败！");
-      }
+      getData({url:'/user/changeBK',method: 'post',data:{path:paths}}).then(res=>{
+        if (res.title === "成功") {
+          d3.select(".myAppCon").style(
+              "background-image",
+              `url(${res.data})`
+          );
+          _this.$message('修改成功！！')
+        }
+      }).catch(()=>{
+        _this.$message('修改失败！')
+      })
     },
     // 初始化背景
     initBK() {
       const _this = this;
-      try {
-        axios
-          .get(_this.pathV + "/user/getBKurl")
-          .then((res) => {
-            d3.select(".myAppCon").style(
-              "background-image",
-              `url(${res.data})`
-            );
-            // console.log(res.data)
-          })
-          .catch(() => {
-            console.log("数据请求失败！");
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    },
+      getData({url: '/user/getBKurl'}).then(res => {
+        d3.select(".myAppCon").style(
+            "background-image",
+            `url(${res})`
+        );
+      }).catch(() => {
+        _this.$message('数据请求失败！')
+      });
+    }
   },
-  mounted() {
+  created() {
     const _this = this;
     _this.initBK();
-    _this.getimgD();
   },
 };
 </script>
