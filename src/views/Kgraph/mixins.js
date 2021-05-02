@@ -1,86 +1,61 @@
 import {mapMutations} from 'vuex'
-import {getData} from "../../tools/network/requests";
 import creatKg from "../../assets/js/creatKG";
+import * as pathParing from '@/tools/network/pathParing'
 
 export default {
     data(){
         return{
-            kgraphInfo:{
-                databaseA: "Graph",
-                databaseP: "123456",
-                databaseD: "7687",
-                databaseS:false
-            },
             myKG1:null,
+            neo4jData:{
+                nodes:[],
+                links:[]
+            },
             fileInfo:{
                 kgInfoList:[],
                 entityInfoList:[]
             },
-            btnShow:false
         }
+    },
+    computed:{
+
     },
     methods:{
         ...mapMutations(['connectNeo4j','closeNeo4j','changNeo4jInfo','addNeo4jAllData','changInputState','initNeo4jDatas','clearEntityList']),
-        loginDatabase() {
+        getNeo4jData(num){
             const _this = this
-            getData({url:'/user/graphs/connectNetwork',method:'post',data: _this.kgraphInfo}).then(res =>{
-                if(res !== '失败'){
-                    _this.$message('neo4j数据登录成功！')
-                    _this.initNeo4jDatas(res)
-                    _this.kgraphInfo.dataBaseS = true
-                    _this.changNeo4jInfo(_this.kgraphInfo)
-                    _this.closeNeo4j()
-                }else {
-                    _this.$message('数据库连接失败!')
-                }
-
-            }).catch(()=>{
-                _this.$message('后台连接失败!')
-            })
-        },
-        displays(num) {
-            const _this = this
-            switch (num) {
-                case 0:
-                    _this.closeNeo4j()
-                    break
-                case 1:
-                        _this.drawer = false
-                        _this.connectNeo4j()
-                        break
-                case 2:
-                        _this.kgraphInfo.dataBaseS = false
-                        _this.changNeo4jInfo(_this.kgraphInfo)
-                        break
+            if(num === 'n'){
+                pathParing.getAllNeo4j().then((res)=>{
+                    _this.neo4jData = res.datas
+                    _this.$message('数据获取成功，开始构建知识网络！')
+                    _this.drawKg()
+                }).catch(()=>{
+                    _this.$message('数据获取失败！')
+                })
+            }else {
+                pathParing.getPartNeo4j({data:num}).then((res)=>{
+                    _this.neo4jData = res.datas
+                    _this.$message('数据获取成功，开始构建知识网络！')
+                    _this.drawKg()
+                }).catch(()=>{
+                    _this.$message('数据获取失败！')
+                })
             }
         },
-        drawKg(path){
+        drawKg(){
             const _this = this
-            getData({url:path}).then(res=>{
-                // console.log(res);
-                if(res !== '失败'){
-                    _this.addNeo4jAllData(res.datas)
-                    _this.$message('知识数据查询成功，正在构建知识网络！')
-                    this.myKG1.updataGraphs(_this.$store.state.graphModule.neo4jAllData);
-                }
-            }).catch(()=>{
-                _this.$message('知识数据查询失败！')
-            })
+            _this.myKG1.updataGraphs(_this.neo4jData);
         },
         clearKg(num){
             const _this = this
             if (num ===0){
-                _this.addNeo4jAllData({links:[],nodes:[]})
-                _this.myKG1.updataGraphs(_this.$store.state.graphModule.neo4jAllData)
+                _this.neo4jData = {links:[],nodes:[]}
+                _this.myKG1.updataGraphs(_this.neo4jData)
             }else {
-                _this.addNeo4jAllData({links:[],nodes:[]})
-                getData({url:'/user/graphs/deleteD'}).then(res=>{
+                pathParing.deleteNeo4j().then((res)=>{
                     _this.$message(res.info)
-                    _this.initNeo4jDatas({links:[],nodes:[]}) //
-                    // _this.initNeo4jDatas({links:[],nodes:[]})
-                    _this.clearEntityList()  //清空缓存
+                    _this.$store.commit('initNeo4jDatas',{nodes:[],links:[]})
                 }).catch(()=>{
-                    _this.$message('删除失败！')
+                    _this.$message('数据删除失败！')
                 })
             }
 
@@ -88,7 +63,7 @@ export default {
         dataImport(num){
             const _this = this
             if (num === 0 ){
-                _this.changInputState()
+                _this.$router.push({path:'/home/kgHome/FileInput'})
                 _this.drawer = false
 
             }
@@ -96,8 +71,12 @@ export default {
         fileImport(idName) {
           document.getElementById(idName).click();
         },
-        readFile(logo,pageName){
+        readFile(logo){
             const _this = this
+            _this.fileInfo = {
+                kgInfoList:[],
+                entityInfoList:[]
+            }
             let fileContent = document.getElementById(logo).files[0]
             _this.fileInfo.name = fileContent.name
             _this.fileInfo.size = fileContent.size
@@ -125,19 +104,36 @@ export default {
                         }
                     }
                 }
-                _this.itemList = []
+                let itemLists = []
+                let num = 0;
                 for (let item of _this.fileInfo.entityInfoList){
                     let newD = {}
+                    newD.numberId = num
                     newD.name = item
                     newD.type = 'commons'
                     newD.color = 'greenyellow'
-                    _this.itemList.push(newD)
+                    itemLists.push(newD)
+                    num++
                 }
-                // console.log(_this.itemList);
+                _this.fileInfo.entityInfoList = itemLists
                 _this.$message('数据读取成功！')
-                this.pageJump(pageName);
             }
-        }
+        },
+        searchDataNum(num){
+            const _this = this
+            let countNum = 0
+            switch (num){
+                case 0:
+                    countNum = _this.$store.state.graphModule.initNeo4jData.nodes.length
+                    _this.$message('知识节点的数量为：'+countNum)
+                    break
+                case 1:
+                    countNum = _this.$store.state.graphModule.initNeo4jData.links.length
+                    _this.$message('知识三元组的数量为：'+countNum)
+                    break
+            }
+        },
+
     },
     created() {
         this.myKG1 =  new creatKg("kgGraphContain");

@@ -11,12 +11,10 @@ export default {
                 case '离线首页':
                     _this.$store.commit('editLogin', '离线用户')
                     _this.$router.push({ path: '/home/kgHome' })
-                    this.$message('系统离线登录成功！');
                     sessionStorage.setItem('userName','离线用户！')
                     break
                 case '用户首页':
                     _this.$router.push({ path: '/home/kgHome' })
-                    this.$message('欢迎用户'+this.$store.state.loginInfo+"登录此系统");
                     sessionStorage.setItem('userName',this.$store.state.loginInfo)
                     break
                 case '知识图谱':
@@ -38,8 +36,8 @@ export default {
             }
         },
         //页面的拦截，判断是否登录！
-        pageBlock(pageName){
-            console.log(sessionStorage.getItem('userName'))
+        pageBlock(){
+            // console.log(sessionStorage.getItem('userName'))
             if(sessionStorage.getItem('userName') === null){
                 this.$alert('你尚未登录，请先登录！', '登录提示', {
                     confirmButtonText: '确定',
@@ -48,20 +46,18 @@ export default {
                     }
                 });
             }else {
-                this.$store.commit('editLogin',sessionStorage.getItem('userName'))
-                this.pageJump(pageName)
+                this.$message('欢迎用户'+this.$store.state.loginInfo+"登录此系统");
             }
         }
     },
     computed:{},
     created() {
         const _this = this;
-        console.log(_this.pageName)
-        let initData;
+        //各页面初始化逻辑
         switch (_this.pageName){
+            //登录界面
             case 'Login':
-                initData = pathParing.initLogin();
-                initData.then(res =>{
+                pathParing.getImgList().then(res =>{
                     _this.$store.commit('initBgImgList',res)
                 }).catch(()=>{
                     _this.$message('服务器背景图片获取失败！')
@@ -69,11 +65,29 @@ export default {
                 break
             //离线首页在加载之前判断
             case 'Home':
-                _this.pageBlock('离线首页');
+                _this.pageBlock();
+                _this.$store.commit('editLogin',sessionStorage.getItem('userName'))
+                pathParing.getImgList().then(res =>{
+                    _this.$store.commit('initBgImgList',res)
+                }).catch(()=>{
+                    _this.$message('服务器背景图片获取失败！')
+                })
                 break;
+            //知识图谱页面
             case 'kgraph':
-                console.log(sessionStorage.getItem('userName'))
-                _this.pageBlock('离线首页');
+                _this.pageBlock();
+                if(sessionStorage.getItem('neo4jInfo') === null || sessionStorage.getItem('neo4jInfo') === ''){
+                    _this.$store.commit('closeNeo4j')
+                }else {
+                    let dbAcount = sessionStorage.getItem('neo4jInfo')
+                    _this.$store.commit('initNeo4j',dbAcount)
+                    //获取数据，初始化数据
+                    pathParing.getAllNeo4j().then(res=>{
+                        _this.$store.commit('initNeo4jDatas',res.datas)
+                    }).catch(()=>{
+                        _this.$message('知识数据获取失败！')
+                    })
+                }
                 break;
         }
     },

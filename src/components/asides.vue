@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {getData} from "@/tools/network/requests";
+import * as pathParing from '@/tools/network/pathParing'
 import * as d3 from "d3";
 export default {
   name: "asides",
@@ -51,9 +51,13 @@ export default {
       let params = new FormData();
       params.append("file", x);
       // let config = { header: { "Content-Type": "multipart/form-data" } };
-      getData({url:'/user/addImgs',method: 'post',data:params,header:{ "Content-Type": "multipart/form-data" }}).then(res=>{
+      pathParing.addImgData(params).then((res)=>{
         if (res === "成功") {
-          _this.getimgD();
+          pathParing.getImgList().then(res =>{
+            _this.$store.commit('initBgImgList',res)
+          }).catch(()=>{
+            _this.$message('服务器背景图片获取失败！')
+          })
           _this.$message('图片上传成功！')
         }else {
           _this.$message('图片上传失败！')
@@ -65,11 +69,11 @@ export default {
     //改变背景图片
     changeB(paths) {
       const _this = this;
-      getData({url:'/user/changeBK',method: 'post',data:{path:paths}}).then(res=>{
+      pathParing.editBgInfo({path:paths}).then(res=>{
         if (res.title === "成功") {
           d3.select(".myAppCon").style(
-              "background-image",
-              `url(${res.data})`
+            "background-image",
+            `url(${res.data})`
           );
           _this.$message('修改成功！！')
         }
@@ -80,10 +84,11 @@ export default {
     // 初始化背景
     initBK() {
       const _this = this;
-      getData({url: '/user/getBKurl'}).then(res => {
+      pathParing.getImgBg().then(res => {
+        // console.log(res)
         d3.select(".myAppCon").style(
-            "background-image",
-            `url(${res})`
+          "background-image",
+          `url(${res})`
         );
       }).catch(() => {
         _this.$message('数据请求失败！')

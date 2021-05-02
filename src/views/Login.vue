@@ -86,9 +86,6 @@ export default {
         this.displayC = true;
       }
     },
-  },
-  created() {
-    // console.log(sessionStorage.getItem('userName'))
   }
 };
 </script>

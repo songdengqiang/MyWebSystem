@@ -9,86 +9,109 @@
       class="panelCon"
       v-show="drawer"
     >
-      <h4>数据库的操作</h4>
-      <el-row>
-        <el-button type="success" size="small" plain @click="displays(1)"
-          >连接数据库</el-button
-        >
-        <el-button type="info" size="small" plain @click="displays(2)">退出数据库数据</el-button>
-      </el-row>
-      <el-row>
-        <h4 v-show="$store.state.graphModule.kgraphInfo.dataBaseS">数据库：{{$store.state.graphModule.kgraphInfo.databaseA}}以登录！</h4>
-        <h4 v-show="!$store.state.graphModule.kgraphInfo.dataBaseS">数据库：尚未登录！</h4>
-      </el-row>
-      <h4>可视化功能</h4>
-      <div class="otherControl" v-show="$store.state.graphModule.kgraphInfo.dataBaseS">
-        <el-dropdown trigger="click" class="kgNumChoose">
-          <span class="el-dropdown-link">
-            知识节点可视化<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getAllData')">所有知识组显示</span></el-dropdown-item
+      <el-card class="box-card" style='height: 30%'>
+        <div slot="header" class="clearfix">
+          <span>数据库操作</span>
+        </div>
+        <div class="text item">
+          <el-row>
+            <el-button type="success" size="small" plain @click="loginDatabase()"
+            >连接数据库</el-button
             >
-            <el-dropdown-item icon="el-icon-circle-check"><span @click="drawKg('/user/graphs/getlimit1')">25组知识显示</span></el-dropdown-item>
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit2')">50组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit3')">100组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit4')">200组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit5')">400组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit6')">800组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit7')">1600组知识显示</span></el-dropdown-item
-            >
-            <el-dropdown-item icon="el-icon-circle-check"
-              ><span @click="drawKg('/user/graphs/getlimit8')">3200组知识显示</span></el-dropdown-item
-            >
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-button type="info" size="small" plain @click="clearKg(0)">清空显示</el-button>
-        <hr>
-        <h4>数据的导入功能</h4>
-        <el-row>
-          <el-button type="info" size="small" plain @click="dataImport(0)" class="btnStyle">txt数据导入</el-button>
-          <el-button type="info" size="small" plain  class="btnStyle">txt数据导出</el-button>
-          <el-button type="info" size="small" plain @click="dataImport(0)" class="btnStyle">json数据导入</el-button>
-          <el-button type="info" size="small" plain  class="btnStyle">json数据导出</el-button>
-          <el-button type="info" size="small" plain @click="dataImport(0)" class="btnStyle">csv数据导入</el-button>
-          <el-button type="info" size="small" plain  class="btnStyle">csv数据导出</el-button>
-        </el-row>
-        <hr>
-        <h4>其它功能</h4>
-        <el-row>
-          <el-button type="info" size="small" plain  class="btnStyle" @click="clearKg(1)">清空数据库知识</el-button>
-          <el-button type="info" size="small" plain  class="btnStyle">修改显示设置</el-button>
-        </el-row>
-      </div>
+            <el-button type="info" size="small" plain @click="closeDatabase()">退出数据库数据</el-button>
+          </el-row>
+          <el-row>
+            <h4 v-show="$store.state.graphModule.neo4jState">数据库：{{$store.state.graphModule.kgraphInfo.dbAcount}}以登录,占用端口:{{$store.state.graphModule.kgraphInfo.dbPort}}</h4>
+            <h4 v-show="!$store.state.graphModule.neo4jState">数据库：尚未登录！</h4>
+          </el-row>
+        </div>
+      </el-card>
+      <el-card class="box-card" style='height: 70%'>
+        <div slot="header" class="clearfix">
+          <span>可视化功能</span>
+        </div>
+        <div class="text item">
+          <div class="otherControl" v-show="$store.state.graphModule.neo4jState">
+            <el-dropdown trigger="click" class="kgNumChoose">
+              <span class="el-dropdown-link">
+                知识节点可视化<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item icon="el-icon-circle-check"
+                ><span @click="getNeo4jData('n')">所有知识组显示</span></el-dropdown-item
+                >
+                <el-dropdown-item icon="el-icon-circle-check"><span @click="getNeo4jData('25')">25组知识显示</span></el-dropdown-item>
+                <el-dropdown-item icon="el-icon-circle-check"
+                ><span @click="getNeo4jData('50')">50组知识显示</span></el-dropdown-item
+                >
+                <el-dropdown-item icon="el-icon-circle-check"
+                ><span @click="getNeo4jData('100')">100组知识显示</span></el-dropdown-item
+                >
+                <el-dropdown-item icon="el-icon-circle-check"
+                ><span @click="getNeo4jData('200')">200组知识显示</span></el-dropdown-item
+                >
+                <el-dropdown-item icon="el-icon-circle-check"
+                ><span>自定义个数</span></el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-button type="info" size="small" plain @click="clearKg(0)">清空显示</el-button>
+            <hr>
+            <h4>其它功能</h4>
+            <el-row>
+              <el-button type="info" size="small" plain @click="dataImport(0)" class="btnStyle">数据导入导出</el-button>
+              <el-dropdown trigger="click" class="kgNumChoose">
+              <span class="el-dropdown-link">
+                数据库操作<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-circle-check" >
+                    <span @click='clearKg(1)'>清空数据库知识</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-circle-check" >
+                    <span @click='searchDataNum(0)'>查询数据库节点数</span>
+                  </el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-circle-check" >
+                    <span @click='searchDataNum(1)'>查询数据库知识数</span>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-row>
+            <hr>
+          </div>
+        </div>
+      </el-card>
     </el-drawer>
   </div>
 </template>
 
 <script>
 import mixins from './mixins'
+// import * as pathParing from '@/tools/network/pathParing'
+
 export default {
   name: "kgControlPanel",
   mixins:[mixins],
   data() {
     return {
       drawer: false,
-      otherControl: false,
     };
   },
   methods: {
-
+    loginDatabase(){
+      const _this = this
+      if(_this.$store.state.graphModule.neo4jState){
+        _this.$message('你已登录数据库:'+ _this.$store.state.graphModule.kgraphInfo.dbAcount + '占用端口:' + _this.$store.state.graphModule.kgraphInfo.dbPort)
+      }else{
+        _this.$store.commit('closeNeo4j')
+      }
+    },
+    closeDatabase(){
+      const _this = this
+      sessionStorage.setItem('neo4jInfo','')
+      _this.$store.commit('closeNeo4j')
+      _this.$message('数据库已退出！')
+    }
   },
 };
 </script>
@@ -112,6 +135,8 @@ h4 {
 span{
   width: 100%;
   height: 100%;
+  font-size: 1.4rem;
+  font-family: '楷体';
 }
 .btnStyle{
   margin: 1rem;

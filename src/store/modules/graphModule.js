@@ -1,47 +1,49 @@
+import * as pathParing from '@/tools/network/pathParing'
 export default {
     state:{
+        //初始化的时候加载
         neo4jState:false,
-        neo4jAllData:{},
-        initNeo4jData:{},
-        entityList:[],
         kgraphInfo:{
-            databaseA: "",
-            databaseD: "7687",
-            dataBaseS:false,
-        }
+            dbAcount: "graph",
+            dbPort: 7687,
+            dbPassword:'123456'
+        },
+        //登录后缓存
+        initNeo4jData:{
+            nodes:[],
+            links:[]
+        },
+        entityList:[]
     },
     getters:{},
     mutations:{
-        connectNeo4j(state){
-            if (!state.kgraphInfo.dataBaseS){
-                state.neo4jState = true
-            }else {
-                state.neo4jState = false
-            }
+        connectNeo4j(state,info){
+            state.neo4jState = true
+            state.kgraphInfo.dbPort === info.dbPort
+            state.kgraphInfo.dbAcount === info.dbAcount
+            state.kgraphInfo.dbPassword === info.dbPassword
         },
         closeNeo4j(state){
             state.neo4jState = false
+            state.kgraphInfo.dbPort === '7687'
+            state.kgraphInfo.dbAcount === 'graph'
+            state.kgraphInfo.dbPassword === '123456'
         },
-        changNeo4jInfo(state,info){
-            state.kgraphInfo = info
-        },
-        addNeo4jAllData(state,param){
-            state.neo4jAllData = param
+        initNeo4j(state,info){
+            state.neo4jState = true
+            state.kgraphInfo.dbAcount = info
         },
         initNeo4jDatas(state,param){
             state.initNeo4jData = param
-            for(let i of param.nodes){
-                state.entityList.push(i.name)
-            }
         },
-        clearEntityList(state){
-            state.entityList = []
-        },
-        editDataBase(state,index){
-            state.neo4jAllData.nodes.splice(index,1)
-        }
     },
     actions:{
-
+        initNeo4jDatasSync(context){
+            pathParing.getAllNeo4j().then(res=>{
+                context.commit('initNeo4jDatas',res.datas)
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }
     }
 }
