@@ -1,50 +1,41 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Kgraph from "./Kgraph/Kgraph";
+import Router from 'vue-router'
+import login from './modules/login'
 
-Vue.use(VueRouter)
+Vue.use(Router)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Login',
-    component: Login,
-    meta:{titile:'系统登录界面'}
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta:{titile:'系统登录界面'}
-  },
-  {
-    path:'/home',
-    name:'Home',
-    component:() => import('@/views/Home'),
-    meta:{titile:'系统首页'},
-    children:[
-      Kgraph
-    ]
-  },
-  {
-    path:'/err',
-    name:'err',
-    component:() => import('@/views/404.vue'),
-    meta:{titile:'错误页面'}
-  }
+/* Layout */
+
+export const constantRoutes = [
+    {
+        path: '/',
+        redirect:'/lg/login1',
+        meta: {name: "个人管理系统"}
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: () =>
+            import ('@/views/404'),
+        meta: {name:'错误界面'}
+    },
+    login,
+    // 404 page must be placed at the end !!!
+    { path: '*', redirect: '/404', hidden: true }
 ]
 
-const router = new VueRouter({
-  mode: 'hash',
-  base: process.env.BASE_URL,
-  routes
+const createRouter = () => new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
 })
-router.beforeEach((to, from, next)=>{
-  //从from跳转到to
 
-  document.title = to.matched[to.matched.length-1].meta.titile
-  next();
-})
+const router = createRouter()
+
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+export function resetRouter() {
+    const newRouter = createRouter()
+    router.matcher = newRouter.matcher // reset router
+}
 
 export default router

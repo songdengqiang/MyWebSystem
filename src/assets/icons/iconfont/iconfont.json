@@ -1,0 +1,23 @@
+{
+  "id": "2435453",
+  "name": "1705",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11748306",
+      "name": "雷达",
+      "font_class": "leida",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "12637475",
+      "name": "雷达",
+      "font_class": "leida1",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}

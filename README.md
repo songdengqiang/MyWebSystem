@@ -1,24 +1,11 @@
-# mysystem
+# 安装部署
 
-## Project setup
-```
-yarn install
-```
+安装tomcat，配置
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+将MapDownload放到tomcat虚拟站点下
 
-### Compiles and minifies for production
-```
-yarn build
-```
+将jzmes放到MapDownload目录下
 
-### Lints and fixes files
-```
-yarn lint
-```
+启动tomcat
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+在chrome浏览器输入地址localhost:8080/jzmes

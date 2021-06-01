@@ -1,0 +1,52 @@
+{
+    "TCP": [{
+            "port": "8060",
+            "line": "TCP线路1",
+            "host": "127.0.0.1",
+            "isConnected": false,
+            "speed": 0,
+            "activeUser": 0
+        },
+        {
+            "port": "8061",
+            "line": "TCP线路2",
+            "host": "127.0.0.1",
+            "isConnected": false,
+            "speed": 0,
+            "activeUser": 0
+        },
+        {
+            "port": "8062",
+            "line": "TCP线路3",
+            "host": "127.0.0.1",
+            "isConnected": false,
+            "speed": 0,
+            "activeUser": 0
+        }
+    ],
+    "UDP": [{
+            "port": "501",
+            "line": "UDP线路1",
+            "host": "127.0.0.1",
+            "isConnected": false,
+            "speed": 0,
+            "activeUser": 0
+        },
+        {
+            "port": "502",
+            "line": "UDP线路2",
+            "host": "127.0.0.1",
+            "isConnected": false,
+            "speed": 0,
+            "activeUser": 0
+        },
+        {
+            "port": "503",
+            "line": "UDP线路3",
+            "host": "127.0.0.1",
+            "isConnected": false,
+            "speed": 0,
+            "activeUser": 0
+        }
+    ]
+}
